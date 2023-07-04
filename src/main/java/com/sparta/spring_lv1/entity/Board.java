@@ -30,10 +30,16 @@ public class Board extends  Timestamped{
 
     @Column(name = "password", nullable = false)
     private String password;            // 입력한 비밀번호
-//
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private UserRoleEnum role;  // 유저용 권한
+
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+
+    // 사용자 권한, 저장은 권한명 그대로 진행함
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;  // 유저용 권한
 
     public Board(BoardRequestDto requestDto) {
         this.username = requestDto.getUsername();
@@ -48,5 +54,14 @@ public class Board extends  Timestamped{
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
+
+    //
+    public Board(String username, String password, String email, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
 }
 
