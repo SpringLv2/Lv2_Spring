@@ -22,18 +22,25 @@ repositories {
 }
 
 dependencies {
-    // JPA 설정
+    // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // MySQL
+    runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+
+    // Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
 }
 
 tasks.named('test') {
