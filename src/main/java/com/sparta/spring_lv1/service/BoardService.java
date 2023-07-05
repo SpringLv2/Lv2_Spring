@@ -1,29 +1,21 @@
 package com.sparta.spring_lv1.service;
 
-
 import com.sparta.spring_lv1.dto.BoardRequestDto;
 import com.sparta.spring_lv1.dto.BoardResponseDto;
 import com.sparta.spring_lv1.entity.Board;
 import com.sparta.spring_lv1.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.*;
+import javax.swing.*;
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
-
-    // 데이터베이스 -> @RequiredArgsConstructor 로 생성
-
-
 
     // 생성
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
@@ -31,9 +23,7 @@ public class BoardService {
 
         // DB저장
         Board saveBoard = boardRepository.save(board);
-
-        // Entity -> ResponseDto로 변환을 진행함
-        BoardResponseDto boardResponseDto = new BoardResponseDto(saveBoard);  // BoardResponseDto에 board 생성자 추가등록
+        BoardResponseDto boardResponseDto = new BoardResponseDto(saveBoard);
 
         return boardResponseDto;
     }
@@ -41,58 +31,42 @@ public class BoardService {
 
     // 전체조회
     public List<BoardResponseDto> getBoard() {
-        // DB 조회
-        return boardRepository.findAll();
-
-
+        return boardRepository.findAllByOrderByModifiedAtDesc().stream().map(BoardResponseDto::new).toList();
     }
 
 
     // 선택조회
     public BoardResponseDto getBoardById(Long id) {
-        // 해당 ID의 게시글을 조회
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));
 
-        return boardRepository.findOne(id);
+        return new BoardResponseDto(
+                board.getUsername(), board.getTitle(), board.getContents(), board.getCreatedAt());
     }
 
 
     // 수정
+    @Transactional
     public Long updateBoard(Long id, BoardRequestDto requestDto) {
         // 해당 게시글이 DB에 존재하는지 확인
-
-        Board board = boardRepository.findById(id);
-        if (board != null) {
-            // 비밀번호 일치 여부 확인
-            if (requestDto.getPassword().equals(board.getPassword())) {
-
-                boardRepository.update(id, requestDto);
-
-                return id;
-            } else {
-                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-            }
-        } else {
-            throw new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.");
-        }
+        Board board = findBoard(id);
+        // board 내용 수정
+        board.update(requestDto);
+        return id;
     }
 
     // 삭제
-    public Long deleteMemo(Long id, BoardRequestDto requestDto) {
+    public Long deleteMemo(Long id) {
         // 해당 메모가 DB에 존재하는지 확인
-        Board board = boardRepository.findById(id);
-        // 비밀번호 검증 필요함
-        if (board != null) {
-            if (requestDto.getPassword().equals(board.getPassword())) {
-                // 게시글 삭제
-                boardRepository.delete(id, requestDto);
-                System.out.println("삭제가 완료되었습니다.");
+        Board board = findBoard(id);
+        // board 삭제할 게시글
+        boardRepository.delete(board);
+        return id;
+    }
 
-                return id;
-            } else {
-                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-            }
-        } else {
-            throw new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.");
-        }
+    private Board findBoard(Long id) {
+        return boardRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
+        );
     }
 }

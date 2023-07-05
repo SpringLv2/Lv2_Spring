@@ -23,9 +23,7 @@ public class BoardController {
     // 데이터베이스
     private final BoardService boardService; // @RequiredArgsConstructor
 
-
-
-    // 게시글 생성하기
+    // 게시글 생성하기 - 토큰 검증 필요함
     @PostMapping("/boards")
     public BoardResponseDto creatBoard(@RequestBody BoardRequestDto requestDto) {
         return boardService.createBoard(requestDto);  //
@@ -43,7 +41,7 @@ public class BoardController {
         return boardService.getBoardById(id);  //
     }
 
-    // 게시글 수정하기 - 비밀번호 검증기능 필요함
+    // 게시글 수정하기 - 토큰 검증, 작성자 필터링 필요함
     @PutMapping("/boards/{id}")
     public Long updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto requestDto) {
         return boardService.updateBoard(id, requestDto);  //
@@ -51,9 +49,9 @@ public class BoardController {
 
     }
 
-    // 메모 삭제하기
+    // 메모 삭제하기 - 토큰 검증, 작성자 필터링 필요함
     @DeleteMapping("/boards/{id}")
-    public Long deleteMemo(@PathVariable Long id, @RequestBody BoardRequestDto requestDto) {
-        return boardService.deleteMemo(id, requestDto);  //
+    public Long deleteMemo(@PathVariable Long id) {
+        return boardService.deleteMemo(id);  //
     }
 }
