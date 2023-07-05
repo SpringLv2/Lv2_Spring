@@ -32,9 +32,6 @@ public class Board extends  Timestamped{
     private String password;            // 입력한 비밀번호
 
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
 
     public Board(BoardRequestDto requestDto) {
         this.username = requestDto.getUsername();

@@ -26,7 +26,7 @@ public class BoardController {
 
     // 게시글 생성하기 - 토큰 검증 필요함
     @PostMapping("/boards")
-    public BoardResponseDto creatBoard(BoardRequestDto requestDto) {
+    public BoardResponseDto creatBoard(@RequestBody BoardRequestDto requestDto) {
 
        return boardService.createBoard(requestDto);  //
 
