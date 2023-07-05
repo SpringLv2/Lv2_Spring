@@ -25,10 +25,6 @@ public class AuthController {
 
     public final JwtUtil jwtUtil;
 
-//    public AuthController(JwtUtil jwtUtil){
-//        this.jwtUtil = jwtUtil;
-//    }
-
     // 쿠키 만들기
     @GetMapping("/create-cookie")
     public String createCookie(HttpServletResponse res) {

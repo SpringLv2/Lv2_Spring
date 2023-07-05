@@ -21,8 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class BoardController {
-    // 데이터베이스
-    private final BoardService boardService; // @RequiredArgsConstructor
+    private final BoardService boardService; //
 
     // 게시글 생성하기 - 토큰 검증 필요함
     @PostMapping("/boards")
@@ -31,10 +30,6 @@ public class BoardController {
        return boardService.createBoard(requestDto);  //
 
     }
-
-
-
-
     // 게시글 전체조회
     @GetMapping("/boards")
     public List<BoardResponseDto> getBoard() {
@@ -51,7 +46,6 @@ public class BoardController {
     @PutMapping("/boards/{id}")
     public Long updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto requestDto) {
         return boardService.updateBoard(id, requestDto);  //
-    // 업데이트 할 게시글의 {id}를 받아옴, 수정된 정보를 JSON으로 받아옴
 
     }
 

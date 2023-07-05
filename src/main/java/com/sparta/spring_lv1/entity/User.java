@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User_bata {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,17 +21,13 @@ public class User_bata {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public User_bata(String username, String password, String email, UserRoleEnum role) {
+    public User(String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
-        this.email = email;
         this.role = role;
     }
 }

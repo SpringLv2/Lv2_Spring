@@ -10,8 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {        return new BCryptPasswordEncoder();
         /** BCryptPasswordEncoder
          * 스프링 시큐리티에서 제공하는 패스워드 인코더로 알고리즘을 이용하여 패스워드의 암호화를 진행한다.
          * 로그인시 입력한 패스워드와 저장된 암호화된 패스워드를 비교하여 유효성검사를 진행한다.

@@ -1,57 +1,61 @@
 package com.sparta.spring_lv1.controller;
 
-import com.sparta.spring_lv1.dto.LoginRequestDto_beta;
-import com.sparta.spring_lv1.dto.SignupRequestDto_beta;
-import com.sparta.spring_lv1.service.UserService_beta;
+import com.sparta.spring_lv1.dto.LoginRequestDto;
+import com.sparta.spring_lv1.dto.ResultResponsDto;
+import com.sparta.spring_lv1.dto.SignupRequestDto;
+import com.sparta.spring_lv1.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
-    private final UserService_beta userService;
+    private final UserService userService;
 
-    public UserController(UserService_beta userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/user/login-page")   // 로그인
+
+    @PostMapping("/signup")
+    @ResponseBody
+    public ResultResponsDto signup(@RequestBody @Valid SignupRequestDto requestDto){
+        userService.signup(requestDto);
+
+        return new ResultResponsDto("회원가입 성공","200");
+    }
+
+//    @PostMapping("/signup")  // 회원가입 성공하면 로그인하라고 반환페이지를 줄거라서 String으로 선택
+//    public String signupe(SignupRequestDto requestDto) { //@ModelAttribute 생략함
+//        userService.signup(requestDto);  // 서비스로 전달함
+//        return "redirect:/api/user/login-page";
+//    }
+
+    @GetMapping("/login-page")   // 로그인
     public String loginPage() {
         return "login";
     }
 
-    @GetMapping("/user/signup")   // 회원가입
+    @GetMapping("/signup")   // 회원가입
     public String signupPage() {
         return "signup";
     }
 
-    @PostMapping("/user/signup")  // 회원가입 성공하면 로그인하라고 반환페이지를 줄거라서 String으로 선택
-    public String signupe(SignupRequestDto_beta requestDto) { //@ModelAttribute 생략함
-        userService.signup(requestDto);  // 서비스로 전달함
-        return "redirect:/api/user/login-page";
-    }
+    @PostMapping("/login")
+    @ResponseBody
+    public ResultResponsDto login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
 
-    @PostMapping("/user/login")
-    public String login(LoginRequestDto_beta requestDto, HttpServletResponse res) {  //@ModelAttribute 생략함
-        // login(LoginRequestDto requestDto, HttpServletResponse res)
-        // HttpServletResponse 받아와야함
-        // JWT Token을 만들고 Cookie를 생성해서 Response 객체에 넣어줘야 함
-        // Servlet이 만들어 준 HttpServletResponse도 받아오도록 설정하기
-
-        // userService.login(requestDto, res)
-        // ㄴ> 로그인할때 검증하라고 받아온 데이터requestDto를 보냄
-        // ㄴ> 검증완료시 JWTTokenCookie에 넣고 그 Cookie도 담으라고 받아온 requestDto도 res로 보내줌
 
         try { // 로그인 오류시 예외처리
             userService.login(requestDto, res);
 
         } catch (Exception e) {
-            return "redirect:/api/user/login-page?error"; // ?error : 클라이언트에서 오류시 이렇게 보내주길 요청했음
+            return new ResultResponsDto("로그인 에러","404");// ?error : 클라이언트에서 오류시 이렇게 보내주길 요청했음
         }
-        return "redirect:/";  // 성공시 메인으로 이동
+        return new ResultResponsDto("로그인 성공","200");
+//        return new ResultResponsDto("로그인 성공","200");  // 성공시 메인으로 이동
     }
 }
