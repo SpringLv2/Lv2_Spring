@@ -12,4 +12,9 @@ public class HomeController {  // 메인페이지에 가기 위해서 만든 컨
         model.addAttribute("username", "username");
         return "index";
     }
+
+    @GetMapping("/board/write")
+    public String write(){
+        return "post";
+    }
 }

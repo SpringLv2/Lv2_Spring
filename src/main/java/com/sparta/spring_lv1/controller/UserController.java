@@ -1,8 +1,8 @@
 package com.sparta.spring_lv1.controller;
 
-import com.sparta.spring_lv1.dto.LoginRequestDto_bata;
-import com.sparta.spring_lv1.dto.SignupRequestDto_bata;
-import com.sparta.spring_lv1.service.UserService_bata;
+import com.sparta.spring_lv1.dto.LoginRequestDto_beta;
+import com.sparta.spring_lv1.dto.SignupRequestDto_beta;
+import com.sparta.spring_lv1.service.UserService_beta;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserService_bata userService;
+    private final UserService_beta userService;
 
-    public UserController(UserService_bata userService) {
+    public UserController(UserService_beta userService) {
         this.userService = userService;
     }
 
@@ -30,13 +30,13 @@ public class UserController {
     }
 
     @PostMapping("/user/signup")  // 회원가입 성공하면 로그인하라고 반환페이지를 줄거라서 String으로 선택
-    public String signupe(SignupRequestDto_bata requestDto) { //@ModelAttribute 생략함
+    public String signupe(SignupRequestDto_beta requestDto) { //@ModelAttribute 생략함
         userService.signup(requestDto);  // 서비스로 전달함
         return "redirect:/api/user/login-page";
     }
 
     @PostMapping("/user/login")
-    public String login(LoginRequestDto_bata requestDto, HttpServletResponse res) {  //@ModelAttribute 생략함
+    public String login(LoginRequestDto_beta requestDto, HttpServletResponse res) {  //@ModelAttribute 생략함
         // login(LoginRequestDto requestDto, HttpServletResponse res)
         // HttpServletResponse 받아와야함
         // JWT Token을 만들고 Cookie를 생성해서 Response 객체에 넣어줘야 함
@@ -48,11 +48,10 @@ public class UserController {
 
         try { // 로그인 오류시 예외처리
             userService.login(requestDto, res);
+
         } catch (Exception e) {
             return "redirect:/api/user/login-page?error"; // ?error : 클라이언트에서 오류시 이렇게 보내주길 요청했음
         }
-
-
         return "redirect:/";  // 성공시 메인으로 이동
     }
 }

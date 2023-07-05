@@ -24,4 +24,10 @@ function getToken() {
     }
 
     return auth;
+
+    // setToken 함수 추가
+    function setToken(token) {
+        Cookies.set('Authorization', token, { path: '/' });
+    }
+
 }
