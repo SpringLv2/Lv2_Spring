@@ -30,10 +30,8 @@ public class Board extends  Timestamped{
 
     @Column(name = "password", nullable = false)
     private String password;            // 입력한 비밀번호
-//
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private UserRoleEnum role;  // 유저용 권한
+
+
 
     public Board(BoardRequestDto requestDto) {
         this.username = requestDto.getUsername();
@@ -48,5 +46,8 @@ public class Board extends  Timestamped{
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
+
+
+
 }
 

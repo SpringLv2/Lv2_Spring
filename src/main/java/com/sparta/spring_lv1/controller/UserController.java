@@ -1,26 +1,55 @@
 package com.sparta.spring_lv1.controller;
 
-import com.sparta.spring_lv1.dto.LoginResultResponsDto;
+import com.sparta.spring_lv1.dto.LoginRequestDto;
+import com.sparta.spring_lv1.dto.ResultResponsDto;
 import com.sparta.spring_lv1.dto.SignupRequestDto;
 import com.sparta.spring_lv1.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
+
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-
-    @PostMapping("/auth/signup")
+  
+    @PostMapping("/signup")
     @ResponseBody
-    public LoginResultResponsDto signup(@RequestBody SignupRequestDto requestDto){
+    public ResultResponsDto signup(@RequestBody @Valid SignupRequestDto requestDto){
         userService.signup(requestDto);
 
-        return new LoginResultResponsDto("로그인 성공","200");
+        return new ResultResponsDto("회원가입 성공","200");
+    }
+
+
+    @GetMapping("/login-page")   // 로그인
+    public String loginPage() {
+        return "login";
+    }
+
+    @GetMapping("/signup")   // 회원가입
+    public String signupPage() {
+        return "signup";
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public ResultResponsDto login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
+
+        try { 
+            userService.login(requestDto, res);
+
+        } catch (Exception e) {
+            return new ResultResponsDto("로그인 에러","404");
+        }
+        return new ResultResponsDto("로그인 성공","200");
+//        return new ResultResponsDto("로그인 성공","200");  
     }
 }

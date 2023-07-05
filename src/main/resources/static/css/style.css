@@ -193,6 +193,22 @@ body {
     color: #ffffff;
 }
 
+#wirte-text {
+    position:absolute;
+    top:48px;
+    right:50px;
+    font-size: 18px;
+    font-family: SpoqaHanSansNeo;
+    font-size: 18px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: 0.36px;
+    text-align: center;
+    color: #ffffff;
+}
+
 .alert-danger {
     color: #721c24;
     background-color: #f8d7da;
@@ -206,3 +222,4 @@ body {
     border: 1px solid transparent;
     border-radius: .25rem;
 }
+
