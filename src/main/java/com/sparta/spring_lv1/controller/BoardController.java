@@ -3,13 +3,20 @@ package com.sparta.spring_lv1.controller;
 
 import com.sparta.spring_lv1.dto.BoardRequestDto;
 import com.sparta.spring_lv1.dto.BoardResponseDto;
+import com.sparta.spring_lv1.dto.ResultResponsDto;
 import com.sparta.spring_lv1.entity.Board;
+import com.sparta.spring_lv1.entity.User;
 import com.sparta.spring_lv1.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
@@ -18,42 +25,50 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/boards")
 public class BoardController {
-    // 데이터베이스
-    private final BoardService boardService; // @RequiredArgsConstructor
 
+    private final BoardService boardService; //
 
-
-    // 게시글 생성하기
-    @PostMapping("/boards")
-    public BoardResponseDto creatBoard(@RequestBody BoardRequestDto requestDto) {
-        return boardService.createBoard(requestDto);  //
+    // 게시글 생성하기 - 토큰 검증 필요함
+    @PostMapping("")
+    public BoardResponseDto creatBoard(@RequestBody BoardRequestDto requestDto, HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        return boardService.createBoard(requestDto, user);//
     }
 
     // 게시글 전체조회
-    @GetMapping("/boards")
+    @GetMapping("")
     public List<BoardResponseDto> getBoard() {
         return boardService.getBoard();  //
     }
 
     // 게시글 선택조회
-    @GetMapping("/boards/{id}")
+    @GetMapping("/{id}")
     public BoardResponseDto getBoardById(@PathVariable Long id) {
-        return boardService.getBoardById(id);  //
+        return boardService.getBoardById(id);
     }
 
-    // 게시글 수정하기 - 비밀번호 검증기능 필요함
-    @PutMapping("/boards/{id}")
-    public Long updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto requestDto) {
-        return boardService.updateBoard(id, requestDto);  //
-    // 업데이트 할 게시글의 {id}를 받아옴, 수정된 정보를 JSON으로 받아옴
+    // 게시글 수정하기 - 토큰 검증, 작성자 필터링 필요함
+    @PutMapping("/{id}")
 
+    public BoardResponseDto updateBoard(@PathVariable Long id,
+                                        @RequestBody BoardRequestDto requestDto,
+                                        HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        return boardService.updateBoard(id, requestDto, user);  //
     }
 
-    // 메모 삭제하기
-    @DeleteMapping("/boards/{id}")
-    public Long deleteMemo(@PathVariable Long id, @RequestBody BoardRequestDto requestDto) {
-        return boardService.deleteMemo(id, requestDto);  //
+    // 메모 삭제하기 - 토큰 검증, 작성자 필터링 필요함
+    @DeleteMapping("/{id}")
+    public ResultResponsDto deleteMemo(@PathVariable Long id,
+                                       HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        try{
+            boardService.deleteMemo(id, user);
+        }catch (Exception e){
+            return new ResultResponsDto("게시글 작성자만 삭제할수 있습니다", "202");
+        }
+        return new ResultResponsDto("게시글 작성 성공","200");  //
     }
 }
