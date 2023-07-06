@@ -54,7 +54,6 @@ public class UserService {
     public void login(LoginRequestDto requestDto, HttpServletResponse res) {
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
-        System.out.println(username);
         // 사용자 확인
         User user = userRepository.findByUsername(username).orElseThrow( 
                 () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
