@@ -1,8 +1,11 @@
 package com.sparta.spring_lv1.filter;
 
-import com.sparta.springauth.entity.User;
-import com.sparta.springauth.jwt.JwtUtil;
-import com.sparta.springauth.repository.UserRepository;
+import com.sparta.spring_lv1.entity.User;
+import com.sparta.spring_lv1.jwt.JwtUtil;
+import com.sparta.spring_lv1.repository.UserRepository;
+import com.sparta.spring_lv1.entity.User;
+import com.sparta.spring_lv1.jwt.JwtUtil;
+import com.sparta.spring_lv1.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 
@@ -21,13 +25,13 @@ public class AuthFilter implements Filter {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public AuthFilter(UserRepository userRepository, JwtUtil jwtUtil) {
+    public AuthFilter(@RequestBody UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(@RequestBody ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String url = httpServletRequest.getRequestURI();
 

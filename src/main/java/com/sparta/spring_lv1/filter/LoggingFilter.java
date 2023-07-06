@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ import java.io.IOException;
 @Order(1)
 public class LoggingFilter implements Filter { // doFilter를 오버라이딩해서 필터로 사용하기
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(@RequestBody  ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 전처리
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String url = httpServletRequest.getRequestURI();
